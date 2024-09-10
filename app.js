@@ -4,14 +4,20 @@ const {
   editCustomer,
   deleteCustomer,
 } = require("./src/modules/customer.js");
+const {
+  getProduct,
+  addProduct,
+  editProduct,
+  deleteProduct,
+} = require("./src/modules/product.js");
 const readlinSync = require("readline-sync");
 
 async function app() {
   try {
-    await getCustomer();
-    // await addCustomer("harouna", "Couha", "HAQT@yahoo.com", "00");
-    // await editCustomer(67, 'Samba Traore', 'NETECK', 'sb@gmail.com', '2032614123')
-    // await deleteCustomer(2);
+    // await addProduct('Dekstop', 'Laptop with 15GB ram', 2000.200, 200, 'Accesoiries', '1405434', 'Available')
+    // await editProduct(1, 'BLALA', 'Laptop with 15GB ram', '2000.200', 200, 'Accesoiries', '1405434', 'Available')
+    await getProduct();
+    // await deleteProduct(3)
   } catch (e) {
     console.log(e.message);
   }
