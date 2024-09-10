@@ -1,3 +1,4 @@
+const readlinSync = require("readline-sync");
 const {
   getCustomer,
   addCustomer,
@@ -16,13 +17,17 @@ const {
   editOrder,
   deleteOrder,
 } = require("./src/modules/purcharseOrder.js");
-const readlinSync = require("readline-sync");
-
+const {
+  getPayment,
+  addPayment,
+  editPayment,
+  deletePayment,
+} = require("./src/modules/payment.js");
 async function app() {
   try {
-    await getOrder()
-    // await addOrder(new Date(), '123 Main St, Cityville', 2, 'TRACK0d05336', 'shipped')
-    // await editOrder(4, new Date(), 'Khabou ', 1, 'TRACK2256', 'shipped')
+    await getPayment();
+    // await editPayment(1, new Date(), "66.22", "Cash", 22);
+    await deletePayment(2)
   } catch (e) {
     console.log(e.message);
   }
