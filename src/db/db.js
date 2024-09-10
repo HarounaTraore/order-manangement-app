@@ -1,16 +1,24 @@
-const mysql = require("mysql2");
-const con =  mysql.createConnection({
+const mysql = require("mysql2/promise");
+
+const pool = mysql.createPool({
   host: "localhost",
   user: "root",
   password: "harouna",
   database: "order_management",
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
 });
 
-const connection = () => {
-   con.connect((err) => {
-    if (err) throw err;
-    console.log("Connected!");
-  });
+const connection = async () => {
+  try {
+    const connection = await pool.getConnection();  // Utiliser une connexion depuis le pool
+    console.log("Connected using connection pool!");
+    return connection;
+  } catch (err) {
+    console.error("Connection failed: ", err.message);
+    throw err;
+  }
 };
-connection();
-module.exports = {  con, connection };
+
+module.exports = { pool, connection };
