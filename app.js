@@ -10,14 +10,19 @@ const {
   editProduct,
   deleteProduct,
 } = require("./src/modules/product.js");
+const {
+  getOrder,
+  addOrder,
+  editOrder,
+  deleteOrder,
+} = require("./src/modules/purcharseOrder.js");
 const readlinSync = require("readline-sync");
 
 async function app() {
   try {
-    // await addProduct('Dekstop', 'Laptop with 15GB ram', 2000.200, 200, 'Accesoiries', '1405434', 'Available')
-    // await editProduct(1, 'BLALA', 'Laptop with 15GB ram', '2000.200', 200, 'Accesoiries', '1405434', 'Available')
-    await getProduct();
-    // await deleteProduct(3)
+    await getOrder()
+    // await addOrder(new Date(), '123 Main St, Cityville', 2, 'TRACK0d05336', 'shipped')
+    // await editOrder(4, new Date(), 'Khabou ', 1, 'TRACK2256', 'shipped')
   } catch (e) {
     console.log(e.message);
   }
