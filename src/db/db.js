@@ -7,12 +7,12 @@ const pool = mysql.createPool({
   database: "order_management",
   waitForConnections: true,
   connectionLimit: 10,
-  queueLimit: 0
+  queueLimit: 0,
 });
 
 const connection = async () => {
   try {
-    const connection = await pool.getConnection();  // Utiliser une connexion depuis le pool
+    const connection = await pool.getConnection();  
     console.log("Connected using connection pool!");
     return connection;
   } catch (err) {

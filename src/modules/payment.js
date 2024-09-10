@@ -24,7 +24,6 @@ async function addPayment(date, amount, payment_method, order_id) {
   try {
     connection = await pool.getConnection();
 
-    // Vérifier si l'ID de la commande existe
     const [idOrder] = await connection.execute(
       "SELECT COUNT(*) AS count FROM purcharses_orders WHERE id = ?",
       [order_id]
@@ -53,13 +52,12 @@ async function editPayment(id, date, amount, payment_method, order_id) {
   try {
     connection = await pool.getConnection();
 
-    // Vérifier si l'ID du paiement existe
+ 
     const [idExist] = await connection.execute(
       "SELECT COUNT(*) AS count FROM payments WHERE id = ?",
       [id]
     );
 
-    // Vérifier si l'ID de la commande existe
     const [idOrder] = await connection.execute(
       "SELECT COUNT(*) AS count FROM purcharses_orders WHERE id = ?",
       [order_id]

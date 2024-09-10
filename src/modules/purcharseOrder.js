@@ -5,7 +5,6 @@ async function getOrder() {
   try {
     connection = await pool.getConnection();
 
-    // Requête pour obtenir toutes les commandes
     const [rows] = await connection.execute("SELECT * FROM purcharses_orders");
     if (rows.length === 0) {
       throw new Error("You don't have any registered orders.");
@@ -30,7 +29,6 @@ async function addOrder(
   try {
     connection = await pool.getConnection();
 
-    // Vérifier si le numéro de suivi (track_number) existe déjà
     const [trackRows] = await connection.execute(
       "SELECT COUNT(*) AS count FROM purcharses_orders WHERE track_number = ?",
       [track_number]
@@ -73,13 +71,12 @@ async function editOrder(
   try {
     connection = await pool.getConnection();
 
-    // Vérifier si l'ID existe
+
     const [idExist] = await connection.execute(
       "SELECT COUNT(*) AS count FROM purcharses_orders WHERE id = ?",
       [id]
     );
 
-    // Vérifier si le numéro de suivi existe déjà mais pour une autre commande
     const [trackRows] = await connection.execute(
       "SELECT COUNT(*) AS count FROM purcharses_orders WHERE track_number = ? AND id != ?",
       [track_number, id]
