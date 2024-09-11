@@ -3,7 +3,7 @@ const {
   product,
   purcharseOrder,
   payment,
-} = require("./src/modules/readlineSync.js");
+} = require("./src/modules/storeManagement.js");
 const readlinSync = require("readline-sync");
 
 async function menu() {
@@ -13,7 +13,6 @@ async function menu() {
   console.log("2. Product management");
   console.log("3. Order management");
   console.log("4. Payment management");
-  console.log("5. Order details management");
   console.log("0. Quit the program");
   const choice = readlinSync.questionInt("\nChoose an option: ");
   return choice;
