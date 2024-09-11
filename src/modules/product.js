@@ -41,7 +41,11 @@ async function addProduct(name, description, price, stock, category, barcode, st
       console.log(`The product ${name} was added successfully.`);
     }
   } catch (error) {
-    throw error;
+    if (error.code === 'ER_ROW_IS_REFERENCED_2') {
+      console.error("\nCannot delete the product: there are references in other tables.");
+    } else {
+      throw error;
+    }
   } finally {
     if (connection) connection.release();
   }
@@ -99,7 +103,13 @@ async function deleteProduct(id) {
       throw new Error("The ID you are trying to delete does not exist.");
     }
   } catch (error) {
-    throw error;
+    if (error.code === "ER_ROW_IS_REFERENCED_2") {
+      console.error(
+        "\nCannot delete the product: there are references in other tables."
+      );
+    } else {
+      throw error;
+    }
   } finally {
     if (connection) connection.release();
   }

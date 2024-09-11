@@ -82,7 +82,9 @@ async function addOrder(
             const quantity = readlineSync.questionInt(
               "Enter the product quantity: "
             );
-            const price = readlineSync.questionFloat("Enter the product price: ");
+            const price = readlineSync.questionFloat(
+              "Enter the product price: "
+            );
             const detail = {
               productId,
               quantity,
@@ -159,11 +161,75 @@ async function editOrder(
         "You cannot assign the same track number to two different orders."
       );
     } else {
-      await connection.execute(
-        "UPDATE purcharses_orders SET date = ?, delivery_address = ?, customer_id = ?, track_number = ?, status = ? WHERE id = ?",
-        [date, delivery_address, customer_id, track_number, status, id]
-      );
-      console.log("The modification is carried out successfully.");
+      const details = [];
+      let choose = 0;
+      while (choose !== 32 && choose !== 33) {
+        console.log("\n   31 Add product");
+        console.log("   32 Save order");
+        console.log("   33 Discard ");
+        choose = readlineSync.questionInt("Choose an option: ");
+        switch (choose) {
+          case 31:
+            // connection.execute(
+            //   "DELETE FROM orders_details WHERE order_id = ?",
+            //   [id]
+            // );
+            let productId = readlineSync.questionInt("Enter the product id: ");
+            let [rows] = await connection.execute(
+              "SELECT * FROM products WHERE id = ?",
+              [productId]
+            );
+            while (rows.length == 0) {
+              console.log("\nThe id you entered does not match any product...");
+              productId = readlineSync.questionInt("Enter the product id: ");
+              [rows] = await connection.execute(
+                "SELECT * FROM products WHERE id = ?",
+                [productId]
+              );
+            }
+            const quantity = readlineSync.questionInt(
+              "Enter the product quantity: "
+            );
+            const price = readlineSync.questionFloat(
+              "Enter the product price: "
+            );
+            const detail = {
+              productId,
+              quantity,
+              price,
+              id,
+            };
+            details.push(detail);
+            break;
+          case 32:
+            await connection.execute(
+              "UPDATE purcharses_orders SET date = ?, delivery_address = ?, customer_id = ?, track_number = ?, status = ? WHERE id = ?",
+              [date, delivery_address, customer_id, track_number, status, id]
+            );
+
+            if (details.length > 0) {
+              for (i in details) {
+                await connection.execute(
+                  "INSERT INTO orders_details (quantity, price, product_id, order_id) VALUES (?, ?, ?, ? )",
+                  [
+                    details[i].quantity,
+                    details[i].price,
+                    details[i].productId,
+                    details[i].id,
+                  ]
+                );
+              }
+            }
+            console.log("The modification is carried out successfully.");
+            break;
+          case 33:
+            console.log("The entered data was not saved.");
+            break;
+          default:
+            console.log("You did not choose a valid option...");
+            break;
+        }
+      }
     }
   } catch (error) {
     throw error;
@@ -189,37 +255,15 @@ async function deleteOrder(id) {
       console.log("The ID you are trying to delete does not exist.");
     }
   } catch (error) {
-    throw error;
+    if (error.code === "ER_ROW_IS_REFERENCED_2") {
+      console.error(
+        "\nCannot delete the order: there are references in other tables."
+      );
+    } else {
+      throw error;
+    }
   } finally {
     if (connection) connection.release();
-  }
-}
-
-async function addDetail() {
-  try {
-    const productIds = [];
-    console.log("\n    ==========Order Submenu==========");
-    console.log("    31 Add product id");
-    console.log("    32 Save order");
-    console.log("    33 Discard ");
-    const choose = readlineSync.questionInt("Choisir une option: ");
-    switch (choose) {
-      case 31:
-        const productId = readlineSync.questionInt("Enter the product id: ");
-        productIds.push(productId);
-        break;
-      case 32:
-        connection = await pool.getConnection();
-
-        if (productIds.length > 0) {
-          const purcharseOrderId = orderId.insertId;
-          for (i in productId) {
-            await connection.execute("INSERT INTO orders_details (");
-          }
-        }
-    }
-  } catch (e) {
-    throw e.message;
   }
 }
 

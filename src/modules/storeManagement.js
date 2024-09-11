@@ -64,7 +64,19 @@ async function customer() {
           await addCustomer(name, address, email, phone);
           break;
         case 3:
-          const id = readlineSync.questionInt("Enter customer ID: ");
+          let id = readlineSync.questionInt("Enter customer ID: ");
+          let [rows] = await connection.execute(
+            "SELECT * FROM customers WHERE id = ?",
+            [id]
+          );
+          while (rows.length == 0) {
+            console.log("\nThe id you entered does not match any product...");
+            productId = readlineSync.questionInt("Enter the product id: ");
+            [rows] = await connection.execute(
+              "SELECT * FROM products WHERE id = ?",
+              [productId]
+            );
+          }
           let newName = readlineSync.question("Enter the new customer name: ");
           while (newName == "") {
             console.log("\nPlease enter the customer's name....");
