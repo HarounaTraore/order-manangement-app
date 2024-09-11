@@ -1,3 +1,4 @@
+const { pool, connection } = require("../db/db.js");
 const readlineSync = require("readline-sync");
 
 const {
@@ -20,7 +21,12 @@ const {
   editOrder,
   deleteOrder,
 } = require("./purcharseOrder.js");
-const { getPayment, addPayment, editPayment, deletePayment } = require("./payment.js");
+const {
+  getPayment,
+  addPayment,
+  editPayment,
+  deletePayment,
+} = require("./payment.js");
 
 async function customer() {
   try {
@@ -39,22 +45,43 @@ async function customer() {
           await getCustomer();
           break;
         case 2:
-          const name = readlineSync.question("Enter customer name: ");
-          const address = readlineSync.question("Enter customer address: ");
+          let name = readlineSync.question("Enter customer name: ");
+          while (name == "") {
+            console.log("\nPlease enter the customer's name....");
+            name = readlineSync.question("Enter customer name: ");
+          }
+          let address = readlineSync.question("Enter customer address: ");
+          while (address == "") {
+            console.log("\nPlease enter the customer's address....");
+            address = readlineSync.question("Enter customer address: ");
+          }
           const email = readlineSync.questionEMail("Enter customer email: ");
-          const phone = readlineSync.question("Enter customer phone: ");
+          let phone = readlineSync.question("Enter customer phone: ");
+          while (phone == "") {
+            console.log("\nPlease enter the customer's phone....");
+            phone = readlineSync.question("Enter customer phone: ");
+          }
           await addCustomer(name, address, email, phone);
           break;
         case 3:
           const id = readlineSync.questionInt("Enter customer ID: ");
-          const newName = readlineSync.question(
-            "Enter the new customer name: "
-          );
-          const newAddress = readlineSync.question("Enter the new address: ");
+          let newName = readlineSync.question("Enter the new customer name: ");
+          while (newName == "") {
+            console.log("\nPlease enter the customer's name....");
+            newName = readlineSync.question("Enter the new customer name: ");
+          }
+
+          let newAddress = readlineSync.question("Enter the new address: ");
+          while (newAddress == "") {
+            console.log("\nPlease enter the customer's address....");
+            newAddress = readlineSync.question("Enter the new address: ");
+          }
           const newEmail = readlineSync.questionEMail("Enter the new email: ");
-          const newPhone = readlineSync.question(
-            "Enter the new phone number: "
-          );
+          let newPhone = readlineSync.question("Enter the new phone number: ");
+          while (newPhone == "") {
+            console.log("\nPlease enter the customer's phone....");
+            newPhone = readlineSync.question("Enter the new phone number: ");
+          }
           await editCustomer(id, newName, newAddress, newEmail, newPhone);
           break;
         case 4:
@@ -91,15 +118,36 @@ async function product() {
           await getProduct();
           break;
         case 2:
-          const name = readlineSync.question("Enter product name: ");
-          const description = readlineSync.question(
+          let name = readlineSync.question("Enter product name: ");
+          while (name == "") {
+            console.log("\nPlease enter the prodact's name....");
+            name = readlineSync.question("Enter product name: ");
+          }
+          let description = readlineSync.question(
             "Enter product description: "
           );
+          while (description == "") {
+            console.log("\nPlease enter the prodact's description....");
+            description = readlineSync.question("Enter product description: ");
+          }
           const price = readlineSync.questionFloat("Enter product price: ");
           const stock = readlineSync.questionInt("Enter product stock: ");
-          const category = readlineSync.question("Enter product category: ");
-          const barcode = readlineSync.question("Enter product barcode: ");
-          const status = readlineSync.question("Enter product status: ");
+          let category = readlineSync.question("Enter product category: ");
+          while (category == "") {
+            console.log("\nPlease enter the prodact's category....");
+            category = readlineSync.question("Enter product category: ");
+          }
+
+          let barcode = readlineSync.question("Enter product barcode: ");
+          while (barcode == "") {
+            console.log("\nPlease enter the prodact's barcode....");
+            barcode = readlineSync.question("Enter product barcode: ");
+          }
+          let status = readlineSync.question("Enter product status: ");
+          while (status == "") {
+            console.log("\nPlease enter the prodact's status....");
+            status = readlineSync.question("Enter product status: ");
+          }
           await addProduct(
             name,
             description,
@@ -112,25 +160,51 @@ async function product() {
           break;
         case 3:
           const id = readlineSync.questionInt("Enter product ID: ");
-          const newName = readlineSync.question("Enter the new product name: ");
-          const newDescription = readlineSync.question(
+          let newName = readlineSync.question("Enter the new product name: ");
+          while (newName == "") {
+            console.log("\nPlease enter the prodact's name....");
+            newName = readlineSync.question("Enter the new product name: ");
+          }
+          let newDescription = readlineSync.question(
             "Enter the new product description: "
           );
+          while (newDescription == "") {
+            console.log("\nPlease enter the prodact's description....");
+            newDescription = readlineSync.question(
+              "Enter the new product description:  "
+            );
+          }
           const newPrice = readlineSync.questionFloat(
             "Enter the new product price: "
           );
           const newStock = readlineSync.questionInt(
             "Enter the new product stock: "
           );
-          const newCategory = readlineSync.question(
+          let newCategory = readlineSync.question(
             "Enter the new product category: "
           );
-          const newBarcode = readlineSync.question(
+          while (newCategory == "") {
+            console.log("\nPlease enter the prodact's category....");
+            newCategory = readlineSync.question(
+              "Enter the new product category: "
+            );
+          }
+          let newBarcode = readlineSync.question(
             "Enter the new product barcode: "
           );
-          const newStatus = readlineSync.question(
+          while (newBarcode == "") {
+            console.log("\nPlease enter the prodact's barcode....");
+            newBarcode = readlineSync.question(
+              "Enter the new product barcode: "
+            );
+          }
+          let newStatus = readlineSync.question(
             "Enter the new product status: "
           );
+          while (newStatus == "") {
+            console.log("\nPlease enter the prodact's status....");
+            newStatus = readlineSync.question("Enter the new product status: ");
+          }
           await editProduct(
             id,
             newName,
@@ -164,7 +238,7 @@ async function purcharseOrder() {
     let choose = 0;
     while (choose !== 5) {
       console.log("\n  ==========Order Menu==========");
-      console.log("  1. get purcharse order");
+      console.log("  1. Retrieve a purchase order with these details. ");
       console.log("  2. Add a purcharse order");
       console.log("  3. Update purcharse order information");
       console.log("  4. Delete a purcharse order");
@@ -173,32 +247,70 @@ async function purcharseOrder() {
 
       switch (choose) {
         case 1:
-          const ids = readlineSync.questionInt("Enter id order: ")
+          const ids = readlineSync.questionInt("Enter id order: ");
           await getOrder(ids);
           break;
         case 2:
-          const date = readlineSync.question("Enter order date (YYY-MM-DD): ");
-          const deliveryAddress = readlineSync.question(
+          let date = readlineSync.question("Enter order date (YYY-MM-DD): ");
+          while (date == "") {
+            console.log("\nPlease enter the order date....");
+            date = readlineSync.question("Enter order date (YYY-MM-DD): ");
+          }
+          let deliveryAddress = readlineSync.question(
             "Enter oder delivery address: "
           );
+          while (deliveryAddress == "") {
+            console.log("\nPlease enter the order address....");
+            deliveryAddress = readlineSync.question(
+              "Enter oder delivery address: "
+            );
+          }
           const customerId = readlineSync.questionInt(
             "Enter customer customer id: "
           );
-          const tackNumer = readlineSync.question("Enter order TRACK Number: ");
-          const status = readlineSync.question("Enter order status: ");
+          let tackNumer = readlineSync.question("Enter order TRACK Number: ");
+          while (tackNumer == "") {
+            console.log("\nPlease enter the order TRACK Number....");
+            tackNumer = readlineSync.question("Enter order TRACK Number: ");
+          }
+          let status = readlineSync.question("Enter order status: ");
+          while (status == "") {
+            console.log("\nPlease enter the order status....");
+            status = readlineSync.question("Enter order status: ");
+          }
           await addOrder(date, deliveryAddress, customerId, tackNumer, status);
           break;
         case 3:
           const id = readlineSync.questionInt("Enter order id: ");
-          const newDate = readlineSync.question("Enter order date (YYY-MM-DD): ");
-          const newDeliveryAddress = readlineSync.question(
+          let newDate = readlineSync.question("Enter order date (YYY-MM-DD): ");
+          while (newDate == "") {
+            console.log("\nPlease enter the order date....");
+            newDate = readlineSync.question("Enter order date (YYY-MM-DD): ");
+          }
+          let newDeliveryAddress = readlineSync.question(
             "Enter oder delivery address: "
           );
+          while (newDeliveryAddress == "") {
+            console.log("\nPlease enter the order address....");
+            newDeliveryAddress = readlineSync.question(
+              "Enter oder delivery address: "
+            );
+          }
           const newCustomerId = readlineSync.questionInt(
             "Enter customer customer id: "
           );
-          const newTackNumer = readlineSync.question("Enter order TRACK Number: ");
+          let newTackNumer = readlineSync.question(
+            "Enter order TRACK Number: "
+          );
+          while (newTackNumer == "") {
+            console.log("\nPlease enter the order TRACK Number....");
+            newTackNumer = readlineSync.question("Enter order TRACK Number: ");
+          }
           const newStatus = readlineSync.question("Enter order status: ");
+          while (newStatus == "") {
+            console.log("\nPlease enter the order status....");
+            newStatus = readlineSync.question("Enter order status: ");
+          }
           await editOrder(
             id,
             newDate,
@@ -225,7 +337,6 @@ async function purcharseOrder() {
   }
 }
 
-
 async function payment() {
   try {
     let choose = 0;
@@ -243,19 +354,41 @@ async function payment() {
           await getPayment();
           break;
         case 2:
-          const date = readlineSync.question("Enter payment date (YYY-MM-DD): ");
+          let date = readlineSync.question("Enter payment date (YYY-MM-DD): ");
+          while (date == "") {
+            console.log("\nPlease enter the payment date....");
+            date = readlineSync.question("Enter payment date (YYY-MM-DD): ");
+          }
           const amount = readlineSync.questionFloat("Enter payment amount: ");
-          const paymentMethod = readlineSync.question("Enter payment payment method: ");
+          const paymentMethod = readlineSync.question(
+            "Enter payment payment method: "
+          );
           const orderId = readlineSync.questionInt("Enter order id: ");
-          await addPayment(date, amount, paymentMethod, orderId)
+          await addPayment(date, amount, paymentMethod, orderId);
           break;
         case 3:
           const id = readlineSync.questionInt("Enter payment id: ");
-          const newdate = readlineSync.question("Enter payment new date (YYY-MM-DD): ");
-          const newamount = readlineSync.questionFloat("Enter payment new amount: ");
-          const newpaymentMethod = readlineSync.question("Enter payment  method: ");
+          const newdate = readlineSync.question(
+            "Enter payment new date (YYY-MM-DD): "
+          );
+          const newamount = readlineSync.questionFloat(
+            "Enter payment new amount: "
+          );
+          let newpaymentMethod = readlineSync.question(
+            "Enter payment  method: "
+          );
+          while (newpaymentMethod == "") {
+            console.log("\nPlease enter the payment method....");
+            newpaymentMethod = readlineSync.question("Enter payment method: ");
+          }
           const neworderId = readlineSync.questionInt("Enter order id: ");
-          await editPayment(id, newdate, newamount, newpaymentMethod, neworderId)
+          await editPayment(
+            id,
+            newdate,
+            newamount,
+            newpaymentMethod,
+            neworderId
+          );
           break;
         case 4:
           const iD = readlineSync.questionInt("Enter customer ID: ");
@@ -274,5 +407,4 @@ async function payment() {
   }
 }
 
-
-module.exports ={customer, product, purcharseOrder, payment}
+module.exports = { customer, product, purcharseOrder, payment };
