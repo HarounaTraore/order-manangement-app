@@ -26,11 +26,12 @@ async function customer() {
   try {
     let choose = 0;
     while (choose !== 5) {
-      console.log("1. Display customer list");
-      console.log("2. Add a customer");
-      console.log("3. Update customer information");
-      console.log("4. Delete a customer");
-      console.log("5. Exit the customer menu");
+      console.log("\n  ==========Customer Menu==========");
+      console.log("  1. Display customer list");
+      console.log("  2. Add a customer");
+      console.log("  3. Update customer information");
+      console.log("  4. Delete a customer");
+      console.log("  5. Exit the customer menu");
       choose = readlineSync.questionInt("Choose an option: ");
 
       switch (choose) {
@@ -40,24 +41,24 @@ async function customer() {
         case 2:
           const name = readlineSync.question("Enter customer name: ");
           const address = readlineSync.question("Enter customer address: ");
-          const email = readlineSync.question("Enter customer email: ");
+          const email = readlineSync.questionEMail("Enter customer email: ");
           const phone = readlineSync.question("Enter customer phone: ");
           await addCustomer(name, address, email, phone);
           break;
         case 3:
-          const id = readlineSync.question("Enter customer ID: ");
+          const id = readlineSync.questionInt("Enter customer ID: ");
           const newName = readlineSync.question(
             "Enter the new customer name: "
           );
           const newAddress = readlineSync.question("Enter the new address: ");
-          const newEmail = readlineSync.question("Enter the new email: ");
+          const newEmail = readlineSync.questionEMail("Enter the new email: ");
           const newPhone = readlineSync.question(
             "Enter the new phone number: "
           );
           await editCustomer(id, newName, newAddress, newEmail, newPhone);
           break;
         case 4:
-          const iD = readlineSync.question("Enter customer ID: ");
+          const iD = readlineSync.questionInt("Enter customer ID: ");
           await deleteCustomer(iD);
           break;
         case 5:
@@ -77,11 +78,12 @@ async function product() {
   try {
     let choose = 0;
     while (choose !== 5) {
-      console.log("1. Display product list");
-      console.log("2. Add a product");
-      console.log("3. Update product information");
-      console.log("4. Delete a product");
-      console.log("5. Exit the product menu");
+      console.log("\n  ==========Product Menu==========");
+      console.log("  1. Display product list");
+      console.log("  2. Add a product");
+      console.log("  3. Update product information");
+      console.log("  4. Delete a product");
+      console.log("  5. Exit the product menu");
       choose = readlineSync.questionInt("Choose an option: ");
 
       switch (choose) {
@@ -93,8 +95,8 @@ async function product() {
           const description = readlineSync.question(
             "Enter product description: "
           );
-          const price = readlineSync.question("Enter product price: ");
-          const stock = readlineSync.question("Enter product stock: ");
+          const price = readlineSync.questionFloat("Enter product price: ");
+          const stock = readlineSync.questionInt("Enter product stock: ");
           const category = readlineSync.question("Enter product category: ");
           const barcode = readlineSync.question("Enter product barcode: ");
           const status = readlineSync.question("Enter product status: ");
@@ -109,15 +111,15 @@ async function product() {
           );
           break;
         case 3:
-          const id = readlineSync.question("Enter product ID: ");
+          const id = readlineSync.questionInt("Enter product ID: ");
           const newName = readlineSync.question("Enter the new product name: ");
           const newDescription = readlineSync.question(
             "Enter the new product description: "
           );
-          const newPrice = readlineSync.question(
+          const newPrice = readlineSync.questionFloat(
             "Enter the new product price: "
           );
-          const newStock = readlineSync.question(
+          const newStock = readlineSync.questionInt(
             "Enter the new product stock: "
           );
           const newCategory = readlineSync.question(
@@ -141,11 +143,11 @@ async function product() {
           );
           break;
         case 4:
-          const iD = readlineSync.question("Enter product ID: ");
+          const iD = readlineSync.questionInt("Enter product ID: ");
           await deleteProduct(iD);
           break;
         case 5:
-          console.log("Exiting the product menu...");
+          console.log("\nExiting the product menu...\n");
           break;
         default:
           console.log("\nYou did not choose a valid option\n");
@@ -161,43 +163,41 @@ async function purcharseOrder() {
   try {
     let choose = 0;
     while (choose !== 5) {
-      console.log("1. Display purcharse order list");
-      console.log("2. Add a purcharse order");
-      console.log("3. Update purcharse order information");
-      console.log("4. Delete a purcharse order");
-      console.log("5. Exit the order menu");
+      console.log("\n  ==========Order Menu==========");
+      console.log("  1. get purcharse order");
+      console.log("  2. Add a purcharse order");
+      console.log("  3. Update purcharse order information");
+      console.log("  4. Delete a purcharse order");
+      console.log("  5. Exit the order menu");
       choose = readlineSync.questionInt("Choose an option: ");
 
       switch (choose) {
         case 1:
-          await getOrder();
+          const ids = readlineSync.questionInt("Enter id order: ")
+          await getOrder(ids);
           break;
         case 2:
-          const name = readlineSync.question("Enter product name: ");
-          const description = readlineSync.question(
-            "Enter product description: "
-          );
-          const date = readlineSync.question("Enter order date: ");
+          const date = readlineSync.question("Enter order date (YYY-MM-DD): ");
           const deliveryAddress = readlineSync.question(
-            "Enter oder deliveryAddress: "
+            "Enter oder delivery address: "
           );
-          const customerId = readlineSync.question(
-            "Enter customer customerId: "
+          const customerId = readlineSync.questionInt(
+            "Enter customer customer id: "
           );
-          const tackNumer = readlineSync.question("Enter order tackNumer: ");
+          const tackNumer = readlineSync.question("Enter order TRACK Number: ");
           const status = readlineSync.question("Enter order status: ");
           await addOrder(date, deliveryAddress, customerId, tackNumer, status);
           break;
         case 3:
-          const id = readlineSync.question("Enter order id: ");
-          const newDate = readlineSync.question("Enter order date: ");
+          const id = readlineSync.questionInt("Enter order id: ");
+          const newDate = readlineSync.question("Enter order date (YYY-MM-DD): ");
           const newDeliveryAddress = readlineSync.question(
-            "Enter oder deliveryAddress: "
+            "Enter oder delivery address: "
           );
-          const newCustomerId = readlineSync.question(
-            "Enter customer customerId: "
+          const newCustomerId = readlineSync.questionInt(
+            "Enter customer customer id: "
           );
-          const newTackNumer = readlineSync.question("Enter order tackNumer: ");
+          const newTackNumer = readlineSync.question("Enter order TRACK Number: ");
           const newStatus = readlineSync.question("Enter order status: ");
           await editOrder(
             id,
@@ -209,11 +209,11 @@ async function purcharseOrder() {
           );
           break;
         case 4:
-          const iD = readlineSync.question("Enter order ID: ");
+          const iD = readlineSync.questionInt("Enter order ID: ");
           await deleteOrder(iD);
           break;
         case 5:
-          console.log("Exiting the product menu...");
+          console.log("\nExiting the purcharse order menu...\n");
           break;
         default:
           console.log("\nYou did not choose a valid option\n");
@@ -230,11 +230,12 @@ async function payment() {
   try {
     let choose = 0;
     while (choose !== 5) {
-      console.log("1. Display payment list");
-      console.log("2. Add a payment");
-      console.log("3. Update payment information");
-      console.log("4. Delete a payment");
-      console.log("5. Exit the payment menu");
+      console.log("\n  ==========Payment Menu==========");
+      console.log("  1. Display payment list");
+      console.log("  2. Add a payment");
+      console.log("  3. Update payment information");
+      console.log("  4. Delete a payment");
+      console.log("  5. Exit the payment menu");
       choose = readlineSync.questionInt("Choose an option: ");
 
       switch (choose) {
@@ -242,22 +243,22 @@ async function payment() {
           await getPayment();
           break;
         case 2:
-          const date = readlineSync.question("Enter payment date: ");
-          const amount = readlineSync.question("Enter payment amount: ");
+          const date = readlineSync.question("Enter payment date (YYY-MM-DD): ");
+          const amount = readlineSync.questionFloat("Enter payment amount: ");
           const paymentMethod = readlineSync.question("Enter payment payment method: ");
-          const orderId = readlineSync.question("Enter order id: ");
+          const orderId = readlineSync.questionInt("Enter order id: ");
           await addPayment(date, amount, paymentMethod, orderId)
           break;
         case 3:
-          const id = readlineSync.question("Enter payment id: ");
-          const newdate = readlineSync.question("Enter payment new date: ");
-          const newamount = readlineSync.question("Enter payment new amount: ");
+          const id = readlineSync.questionInt("Enter payment id: ");
+          const newdate = readlineSync.question("Enter payment new date (YYY-MM-DD): ");
+          const newamount = readlineSync.questionFloat("Enter payment new amount: ");
           const newpaymentMethod = readlineSync.question("Enter payment  method: ");
-          const neworderId = readlineSync.question("Enter order id: ");
+          const neworderId = readlineSync.questionInt("Enter order id: ");
           await editPayment(id, newdate, newamount, newpaymentMethod, neworderId)
           break;
         case 4:
-          const iD = readlineSync.question("Enter customer ID: ");
+          const iD = readlineSync.questionInt("Enter customer ID: ");
           await deletePayment(iD);
           break;
         case 5:
