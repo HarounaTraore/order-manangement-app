@@ -7,7 +7,7 @@ async function getProduct() {
 
     const [rows] = await connection.execute("SELECT * FROM products");
     if (rows.length === 0) {
-      throw new Error("You don't have any registered products.");
+      console.log("You don't have any registered products.");
     } else {
       console.table(rows);
     }
@@ -30,7 +30,7 @@ async function addProduct(name, description, price, stock, category, barcode, st
     );
 
     if (barcodeRows[0].count > 0) {
-      throw new Error(
+      console.log(
         "You cannot assign barcode number to two different products."
       );
     } else {
@@ -69,9 +69,9 @@ async function editProduct(id, name, description, price, stock, category, barcod
     );
 
     if (idExist[0].count == 0) {
-      throw new Error("The id you are trying to modify does not exist.");
+      console.log("The id you are trying to modify does not exist.");
     } else if (barcodeRows[0].count > 0) {
-      throw new Error(
+      console.log(
         "You cannot assign an barcode to two different products."
       );
     } else {
@@ -100,11 +100,11 @@ async function deleteProduct(id) {
       await connection.execute("DELETE FROM products WHERE id = ?", [id]);
       console.log(`Product with ID ${id} deleted successfully.`);
     } else {
-      throw new Error("The ID you are trying to delete does not exist.");
+      console.log("The ID you are trying to delete does not exist.");
     }
   } catch (error) {
     if (error.code === "ER_ROW_IS_REFERENCED_2") {
-      console.error(
+      console.log(
         "\nCannot delete the product: there are references in other tables."
       );
     } else {

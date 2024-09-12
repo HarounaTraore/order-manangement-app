@@ -164,42 +164,80 @@ async function editOrder(
       const details = [];
       let choose = 0;
       while (choose !== 32 && choose !== 33) {
-        console.log("\n   31 Add product");
-        console.log("   32 Save order");
+        console.log("\n   31 Edit Order Details");
+        console.log("   32 Save ");
         console.log("   33 Discard ");
         choose = readlineSync.questionInt("Choose an option: ");
         switch (choose) {
           case 31:
-            // connection.execute(
-            //   "DELETE FROM orders_details WHERE order_id = ?",
-            //   [id]
-            // );
-            let productId = readlineSync.questionInt("Enter the product id: ");
-            let [rows] = await connection.execute(
-              "SELECT * FROM products WHERE id = ?",
-              [productId]
-            );
-            while (rows.length == 0) {
-              console.log("\nThe id you entered does not match any product...");
-              productId = readlineSync.questionInt("Enter the product id: ");
-              [rows] = await connection.execute(
+            if (details.length == 0) {
+              connection.execute(
+                "DELETE FROM orders_details WHERE order_id = ?",
+                [id]
+              );
+              let productId = readlineSync.questionInt(
+                "Enter the product id: "
+              );
+              let [rows] = await connection.execute(
                 "SELECT * FROM products WHERE id = ?",
                 [productId]
               );
+              while (rows.length == 0) {
+                console.log(
+                  "\nThe id you entered does not match any product..."
+                );
+                productId = readlineSync.questionInt("Enter the product id: ");
+                [rows] = await connection.execute(
+                  "SELECT * FROM products WHERE id = ?",
+                  [productId]
+                );
+              }
+              const quantity = readlineSync.questionInt(
+                "Enter the product quantity: "
+              );
+              const price = readlineSync.questionFloat(
+                "Enter the product price: "
+              );
+              const detail = {
+                productId,
+                quantity,
+                price,
+                id,
+              };
+              details.push(detail);
+            } else {
+              let productId = readlineSync.questionInt(
+                "Enter the product id: "
+              );
+              let [rows] = await connection.execute(
+                "SELECT * FROM products WHERE id = ?",
+                [productId]
+              );
+              while (rows.length == 0) {
+                console.log(
+                  "\nThe id you entered does not match any product..."
+                );
+                productId = readlineSync.questionInt("Enter the product id: ");
+                [rows] = await connection.execute(
+                  "SELECT * FROM products WHERE id = ?",
+                  [productId]
+                );
+              }
+              const quantity = readlineSync.questionInt(
+                "Enter the product quantity: "
+              );
+              const price = readlineSync.questionFloat(
+                "Enter the product price: "
+              );
+              const detail = {
+                productId,
+                quantity,
+                price,
+                id,
+              };
+              details.push(detail);
             }
-            const quantity = readlineSync.questionInt(
-              "Enter the product quantity: "
-            );
-            const price = readlineSync.questionFloat(
-              "Enter the product price: "
-            );
-            const detail = {
-              productId,
-              quantity,
-              price,
-              id,
-            };
-            details.push(detail);
+
             break;
           case 32:
             await connection.execute(
@@ -256,7 +294,7 @@ async function deleteOrder(id) {
     }
   } catch (error) {
     if (error.code === "ER_ROW_IS_REFERENCED_2") {
-      console.error(
+      console.log(
         "\nCannot delete the order: there are references in other tables."
       );
     } else {

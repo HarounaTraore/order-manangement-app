@@ -30,6 +30,7 @@ const {
 
 async function customer() {
   try {
+    const connection = await pool.getConnection();
     let choose = 0;
     while (choose !== 5) {
       console.log("\n  ==========Customer Menu==========");
@@ -70,11 +71,11 @@ async function customer() {
             [id]
           );
           while (rows.length == 0) {
-            console.log("\nThe id you entered does not match any product...");
-            productId = readlineSync.questionInt("Enter the product id: ");
+            console.log("\nThe id you entered does not match any Customer...");
+            id = readlineSync.questionInt("Enter customer ID: ");
             [rows] = await connection.execute(
-              "SELECT * FROM products WHERE id = ?",
-              [productId]
+              "SELECT * FROM customers WHERE id = ?",
+              [id]
             );
           }
           let newName = readlineSync.question("Enter the new customer name: ");
@@ -115,6 +116,7 @@ async function customer() {
 
 async function product() {
   try {
+    const connection = await pool.getConnection();
     let choose = 0;
     while (choose !== 5) {
       console.log("\n  ==========Product Menu==========");
@@ -171,7 +173,21 @@ async function product() {
           );
           break;
         case 3:
-          const id = readlineSync.questionInt("Enter product ID: ");
+          let id = readlineSync.questionInt("Enter product ID: ");
+
+          let [rows] = await connection.execute(
+            "SELECT * FROM products WHERE id = ?",
+            [id]
+          );
+          while (rows.length == 0) {
+            console.log("\nThe id you entered does not match any Product...");
+            id = readlineSync.questionInt("Enter product ID: ");
+            [rows] = await connection.execute(
+              "SELECT * FROM products WHERE id = ?",
+              [id]
+            );
+          }
+
           let newName = readlineSync.question("Enter the new product name: ");
           while (newName == "") {
             console.log("\nPlease enter the prodact's name....");
@@ -247,6 +263,7 @@ async function product() {
 
 async function purcharseOrder() {
   try {
+    const connection = await pool.getConnection();
     let choose = 0;
     while (choose !== 5) {
       console.log("\n  ==========Order Menu==========");
@@ -277,9 +294,23 @@ async function purcharseOrder() {
               "Enter oder delivery address: "
             );
           }
-          const customerId = readlineSync.questionInt(
+          let customerId = readlineSync.questionInt(
             "Enter customer customer id: "
           );
+
+          let [rows] = await connection.execute(
+            "SELECT * FROM customers WHERE id = ?",
+            [customerId]
+          );
+          while (rows.length == 0) {
+            console.log("\nThe id you entered does not match any Customer...");
+            customerId = readlineSync.questionInt("Enter  customer id: ");
+            [rows] = await connection.execute(
+              "SELECT * FROM customers WHERE id = ?",
+              [customerId]
+            );
+          }
+
           let tackNumer = readlineSync.question("Enter order TRACK Number: ");
           while (tackNumer == "") {
             console.log("\nPlease enter the order TRACK Number....");
@@ -293,7 +324,19 @@ async function purcharseOrder() {
           await addOrder(date, deliveryAddress, customerId, tackNumer, status);
           break;
         case 3:
-          const id = readlineSync.questionInt("Enter order id: ");
+          let id = readlineSync.questionInt("Enter order id: ");
+          let [rowss] = await connection.execute(
+            "SELECT * FROM purcharses_orders WHERE id = ?",
+            [id]
+          );
+          while (rowss.length == 0) {
+            console.log("\nThe id you entered does not match any Order...");
+            id = readlineSync.questionInt("Enter Order ID: ");
+            [rowss] = await connection.execute(
+              "SELECT * FROM purcharses_orders WHERE id = ?",
+              [id]
+            );
+          }
           let newDate = readlineSync.question("Enter order date (YYY-MM-DD): ");
           while (newDate == "") {
             console.log("\nPlease enter the order date....");
@@ -308,9 +351,21 @@ async function purcharseOrder() {
               "Enter oder delivery address: "
             );
           }
-          const newCustomerId = readlineSync.questionInt(
-            "Enter customer customer id: "
+          let newCustomerId = readlineSync.questionInt("Enter  customer id: ");
+
+          let [rowsCustomer] = await connection.execute(
+            "SELECT * FROM customers WHERE id = ?",
+            [newCustomerId]
           );
+          while (rowsCustomer.length == 0) {
+            console.log("\nThe id you entered does not match any Customer...");
+            newCustomerId = readlineSync.questionInt("Enter  customer id: ");
+            [rowsCustomer] = await connection.execute(
+              "SELECT * FROM customers WHERE id = ?",
+              [newCustomerId]
+            );
+          }
+
           let newTackNumer = readlineSync.question(
             "Enter order TRACK Number: "
           );
@@ -351,6 +406,7 @@ async function purcharseOrder() {
 
 async function payment() {
   try {
+    const connection = await pool.getConnection();
     let choose = 0;
     while (choose !== 5) {
       console.log("\n  ==========Payment Menu==========");
@@ -375,11 +431,38 @@ async function payment() {
           const paymentMethod = readlineSync.question(
             "Enter payment payment method: "
           );
-          const orderId = readlineSync.questionInt("Enter order id: ");
+          let orderId = readlineSync.questionInt("Enter order id: ");
+          let [rowsOrderId] = await connection.execute(
+            "SELECT * FROM purcharses_orders WHERE id = ?",
+            [orderId]
+          );
+          while (rowsOrderId.length == 0) {
+            console.log("\nThe id you entered does not match any Order...");
+            orderId = readlineSync.questionInt("Enter Order ID: ");
+            [rowsOrderId] = await connection.execute(
+              "SELECT * FROM purcharses_orders WHERE id = ?",
+              [orderId]
+            );
+          }
+
           await addPayment(date, amount, paymentMethod, orderId);
           break;
         case 3:
-          const id = readlineSync.questionInt("Enter payment id: ");
+          let id = readlineSync.questionInt("Enter payment id: ");
+
+          let [rows] = await connection.execute(
+            "SELECT * FROM payments WHERE id = ?",
+            [id]
+          );
+          while (rows.length == 0) {
+            console.log("\nThe id you entered does not match any Payment...");
+            id = readlineSync.questionInt("Enter Payment ID: ");
+            [rows] = await connection.execute(
+              "SELECT * FROM payments WHERE id = ?",
+              [id]
+            );
+          }
+
           const newdate = readlineSync.question(
             "Enter payment new date (YYY-MM-DD): "
           );
@@ -393,13 +476,27 @@ async function payment() {
             console.log("\nPlease enter the payment method....");
             newpaymentMethod = readlineSync.question("Enter payment method: ");
           }
-          const neworderId = readlineSync.questionInt("Enter order id: ");
+          let newOrderId = readlineSync.questionInt("Enter order id: ");
+
+          let [NewRowsOrderId] = await connection.execute(
+            "SELECT * FROM purcharses_orders WHERE id = ?",
+            [newOrderId]
+          );
+          while (NewRowsOrderId.length == 0) {
+            console.log("\nThe id you entered does not match any Order...");
+            newOrderId = readlineSync.questionInt("Enter Order ID: ");
+            [NewRowsOrderId] = await connection.execute(
+              "SELECT * FROM purcharses_orders WHERE id = ?",
+              [newOrderId]
+            );
+          }
+
           await editPayment(
             id,
             newdate,
             newamount,
             newpaymentMethod,
-            neworderId
+            newOrderId
           );
           break;
         case 4:

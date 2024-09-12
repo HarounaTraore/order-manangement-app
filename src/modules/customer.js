@@ -7,7 +7,7 @@ async function getCustomer() {
 
     const [rows] = await connection.execute("SELECT * FROM customers");
     if (rows.length === 0) {
-      throw new Error("You don't have any registered customers.");
+      console.log("You don't have any registered customers.");
     } else {
       console.table(rows);
     }
@@ -35,7 +35,7 @@ async function addCustomer(name, address, email, phone) {
     );
 
     if (emailRows[0].count > 0 || phoneRows[0].count > 0) {
-      throw new Error(
+      console.log(
         "You cannot assign an email or phone number to two different customers."
       );
     } else {
@@ -75,9 +75,9 @@ async function editCustomer(id, name, address, email, phone) {
     );
 
     if (idExist[0].count == 0) {
-      throw new Error("The id you are trying to modify does not exist.");
+      console.log("The id you are trying to modify does not exist.");
     } else if (emailRows[0].count > 0 || phoneRows[0].count > 0) {
-      throw new Error(
+      console.log(
         "You cannot assign an email or phone number to two different customers."
       );
     } else {
@@ -106,11 +106,13 @@ async function deleteCustomer(id) {
       await connection.execute("DELETE FROM customers WHERE id = ?", [id]);
       console.log(`Customer with ID ${id} deleted successfully.`);
     } else {
-      throw new Error("The ID you are trying to delete does not exist.");
+      console.log("\nThe ID you are trying to delete does not exist.");
     }
   } catch (error) {
-    if (error.code === 'ER_ROW_IS_REFERENCED_2') {
-      console.error("\nCannot delete the customer: there are references in other tables.");
+    if (error.code === "ER_ROW_IS_REFERENCED_2") {
+      console.log(
+        "\nCannot delete the customer: there are references in other tables."
+      );
     } else {
       throw error;
     }
