@@ -500,8 +500,21 @@ async function payment() {
           );
           break;
         case 4:
-          const iD = readlineSync.questionInt("Enter customer ID: ");
+          let iD = readlineSync.questionInt("Enter customer ID: ");
+          let [rowsDel] = await connection.execute(
+            "SELECT * FROM payments WHERE id = ?",
+            [iD]
+          );
+          while (rowsDel.length == 0) {
+            console.log("\nThe id you entered does not match any Payment...");
+            iD = readlineSync.questionInt("Enter Payment ID: ");
+            [rowsDel] = await connection.execute(
+              "SELECT * FROM payments WHERE id = ?",
+              [iD]
+            );
+          }
           await deletePayment(iD);
+
           break;
         case 5:
           console.log("\nExiting the payment menu...\n");

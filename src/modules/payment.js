@@ -8,7 +8,7 @@ async function getPayment() {
     // Requête pour obtenir tous les paiements
     const [rows] = await connection.execute("SELECT * FROM payments");
     if (rows.length === 0) {
-      throw new Error("You don't have any registered payments.");
+      console.log("You don't have any registered payments.");
     } else {
       console.table(rows);
     }
@@ -30,7 +30,7 @@ async function addPayment(date, amount, payment_method, order_id) {
     );
 
     if (idOrder[0].count == 0) {
-      throw new Error(
+      console.log(
         "You cannot assign a payment to an order that does not exist."
       );
     } else {
@@ -64,9 +64,9 @@ async function editPayment(id, date, amount, payment_method, order_id) {
     );
 
     if (idExist[0].count == 0) {
-      throw new Error("The payment ID you are trying to modify does not exist.");
+      console.log("The payment ID you are trying to modify does not exist.");
     } else if (idOrder[0].count == 0) {
-      throw new Error("You cannot associate a payment with a non-existent order.");
+      console.log("You cannot associate a payment with a non-existent order.");
     } else {
       await connection.execute(
         "UPDATE payments SET date = ?, amount = ?, payment_method = ?, order_id = ? WHERE id = ?",
@@ -93,7 +93,7 @@ async function deletePayment(id) {
       await connection.execute("DELETE FROM payments WHERE id = ?", [id]);
       console.log(`Payment with ID ${id} deleted successfully.`);
     } else {
-      throw new Error("The payment ID you are trying to delete does not exist.");
+      console.log("The payment ID you are trying to delete does not exist.");
     }
   } catch (error) {
     throw error;
