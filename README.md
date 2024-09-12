@@ -35,7 +35,7 @@ Suivez ces étapes pour configurer le projet sur votre machine locale :
 
 4. **Configuration de la base de données :**
 
-   Le fichier `db/db.js` contient la configuration nécessaire pour interagir avec la base de données et ses différentes tables.
+   Le fichier `./src/db/db.js` contient la configuration nécessaire pour interagir avec la base de données et ses différentes tables.
    Avant de lancer l'application, il est necessaire de remplacer `root` par  `votre nom d'utilisateur` et `harouna` par `votre mot de passe d'utilisateur` dans ce fichier, pour pouvoir se connecter à la base de données en local.
 
 
